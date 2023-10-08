@@ -2,6 +2,7 @@
 
 
 What is Daily Task Scheduler?
+  
   This is an application where we can schedule our regular tasks, which can be rescheduled by the way as well as mark as Completed if in case that specific task is completed. And also an email alert is auto enabled and gets triggered whenever the task gets rescheduled.
 
 1. Setup
