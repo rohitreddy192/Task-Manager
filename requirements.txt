@@ -1,0 +1,6 @@
+flask
+sqlite3
+flask_login
+werkzeug
+email
+smtplib

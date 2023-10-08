@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Scheduler</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add this inside the <head> section -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.0/main.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{{url_for('index')}}">Scheduler</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/add_event">Add Event</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    <div class="container mt-5">
+        <h1>Event Scheduler</h1>
+        <ul class="list-group">
+            {% for task in tasks %}
+            <li class="list-group-item">
+                <strong>{{ task[1] }}</strong>
+                <p>Date: {{ task[2].strftime('%Y-%m-%d') }}, Time: {{ task[3] }}, Duration: {{ task[4] }} hours</p>
+                <div class="alert alert-info mt-3" role="alert">
+                    <div class="alert alert-info" role="alert">
+                        <strong>Notes:</strong>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            {% for note in task[6].split('\n') %}
+                            <li>{{ note }}</li>
+                            {% endfor %}
+                        </ul>
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                    {% if task[2] < current_date_and_time %}
+                    <button class="btn btn-primary btn-sm float-right ml-2 reschedule-btn" data-task-id="{{ task[0] }}">Reschedule</button>
+                    {% endif %}
+                    <button class="btn btn-success btn-sm float-right ml-2 mark-completed" data-task-id="{{ task[0] }}">Completed</button>
+                    <button class="btn btn-warning btn-sm float-right ml-2 edit-task" data-task-id="{{ task[0] }}">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    </div>
+                    <div class="edit-task-form" style="display: none;">
+                        <h4>Edit Task</h4>
+                        <form id="editTaskForm" method="POST" action="/edit_task">
+                            <input type="hidden" name="task_id" id="editTaskId">
+                            <div class="form-group">
+                                <label for="editTaskName">Task Name</label>
+                                <input type="text" class="form-control" id="editTaskName" name="editTaskName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editTaskDate">Date</label>
+                                <input type="date" class="form-control" id="editTaskDate" name="editTaskDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editTaskTime">Time</label>
+                                <input type="time" class="form-control" id="editTaskTime" name="editTaskTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editTaskDuration">Duration (hours)</label>
+                                <input type="number" class="form-control" id="editTaskDuration" name="editTaskDuration" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editTaskNotes">Notes</label>
+                                <textarea class="form-control" id="editTaskNotes" name="editTaskNotes"></textarea>
+                            </div>
+                            <!-- Add other fields for editing task details -->
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                    
+                    <div class="reschedule-form" style="display: none;">
+                            <h4>Reschedule Task</h4>
+                            <form id="rescheduleForm" method="POST" action="/reschedule_task/{{ task_id }}">
+                                <input type="hidden" name="task_id" value="{{ task_id }}">
+                                <div class="form-group">
+                                    <label for="newDate">New Date</label>
+                                    <input type="date" class="form-control" id="newDate" name="newDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newTime">New Time</label>
+                                    <input type="time" class="form-control" id="newTime" name="newTime" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Reschedule Task</button>
+                            </form>
+                        </div>
+                   
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <script>
+        const markButtons = document.querySelectorAll('.mark-completed');
+        markButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const taskId = button.getAttribute('data-task-id');
+                markTaskAsCompleted(taskId);
+            });
+        });
+    
+        function markTaskAsCompleted(taskId) {
+            // Implement AJAX or fetch to mark the task as completed in the backend
+            // After successful completion, remove the task from the UI and reapply filtering
+            // For now, let's just hide the task from the UI for demonstration purposes
+            const taskItem = document.querySelector(`[data-task-id="${taskId}"]`);
+            if (taskItem) {
+                // Update the task status in the UI
+                taskItem.remove();
+    
+                // Implement AJAX or fetch to mark the task as completed in the backend
+                fetch(`/mark_completed/${taskId}`, { method: 'POST' })
+                    .then(response => {
+                        if (response.ok) {
+                            // Once the task is marked as completed in the backend,
+                            // remove the task from the UI and reapply filtering
+                            filterTasks();
+                        }
+                    })
+                    .catch(error => console.error('Error marking task as completed:', error));
+            }
+        }
+    
+        function filterTasks() {
+            const taskItems = document.querySelectorAll('.list-group-item');
+            const currentDate = new Date();
+            taskItems.forEach(taskItem => {
+                const dateString = taskItem.querySelector('p').textContent;
+                const taskDate = new Date(dateString.split(':')[1].trim());
+                if (taskDate < currentDate) {
+                    taskItem.style.display = 'none';
+                } else {
+                    taskItem.style.display = 'block';
+                }
+            });
+        }
+        filterTasks(); // Call the function to initially filter tasks on page load
+    
+    </script>
+    <script>
+            const editButtons = document.querySelectorAll('.edit-task');
+            editButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const taskId = button.getAttribute('data-task-id');
+                    editTask(taskId);
+                });
+            });
+
+            // Function to handle the edit action
+            function editTask(taskId) {
+                // Fetch the task details from the server using an AJAX request
+                fetch(`/get_task_details/${taskId}`)
+                    .then(response => response.json())
+                    .then(taskDetails => {
+                        // Populate the edit form with task details
+                        document.getElementById('editTaskId').value = taskDetails.id;
+                        document.getElementById('editTaskName').value = taskDetails.name;
+                        document.getElementById('editTaskDate').value = taskDetails.date;
+                        document.getElementById('editTaskTime').value = taskDetails.time;
+                        document.getElementById('editTaskDuration').value = taskDetails.duration;
+                        document.getElementById('editTaskNotes').value = taskDetails.notes;
+
+                        // Show the edit form
+                        const editForm = document.querySelector('.edit-task-form');
+                        editForm.style.display = 'block';
+
+                        // Add an event listener for form submission
+                        editForm.addEventListener('submit', (event) => {
+                            // Prevent the default form submission behavior
+                            event.preventDefault();
+
+                            // Get the edited task details from the form fields
+                            const editedTask = {
+                                id: taskId,
+                                name: document.getElementById('editTaskName').value,
+                                date: document.getElementById('editTaskDate').value,
+                                time: document.getElementById('editTaskTime').value,
+                                duration: document.getElementById('editTaskDuration').value,
+                                notes: document.getElementById('editTaskNotes').value,
+                            };
+
+                            // Send the edited task details to the backend
+                            fetch('/edit_task', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(editedTask),
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    // Handle a successful edit, e.g., hide the edit form
+                                    editForm.style.display = 'none';
+                                    // Optionally, you can refresh the task list or update the UI to reflect the changes
+                                } else {
+                                    // Handle errors, e.g., show an error message to the user
+                                    console.error('Error editing task:', response.statusText);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error editing task:', error);
+                            });
+                        });
+                    });
+            }
+        </script>
+        <script>
+            const rescheduleButtons = document.querySelectorAll('.reschedule-btn');
+            const rescheduleForm = document.querySelector('.reschedule-form');
+            const rescheduleFormSubmit = document.getElementById('rescheduleForm');
+        
+            rescheduleButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const taskId = button.getAttribute('data-task-id');
+                    showRescheduleForm(taskId);
+                });
+            });
+        
+            rescheduleFormSubmit.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const taskId = rescheduleFormSubmit.getAttribute('data-task-id');
+                const newDate = document.getElementById('newDate').value;
+                const newTime = document.getElementById('newTime').value;
+                rescheduleTask(taskId, newDate, newTime);
+            });
+        
+            function showRescheduleForm(taskId) {
+                rescheduleForm.style.display = 'block';
+                rescheduleFormSubmit.setAttribute('data-task-id', taskId);
+            }
+            
+            function rescheduleTask(taskId, newDate, newTime) {
+                const requestData = {
+                    task_id: taskId,
+                    newDate: newDate,
+                    newTime: newTime
+                };
+
+                // Define the URL for the backend route handling the rescheduling
+                const rescheduleUrl = '/reschedule_task';
+
+                // Send a POST request to the backend using fetch
+                fetch(rescheduleUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json' // Specify JSON content type
+                    },
+                    body: JSON.stringify(requestData) // Convert the data to JSON format
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json(); // Parse the JSON response
+                    } else {
+                        throw new Error('Network response was not ok');
+                    }
+                })
+                .then(data => {
+                    // Handle the response from the server
+                    if (data.message === 'Task rescheduled successfully') {
+                        // Task was successfully rescheduled, you can update the UI as needed
+                        alert(data.message);
+                        rescheduleForm.style.display = 'none'; // Hide the reschedule form
+                        // You may also update the UI to reflect the new date and time
+                    } else {
+                        alert('Error rescheduling task. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error rescheduling task:', error);
+                    alert('An error occurred while rescheduling the task. Please try again.');
+                });
+                alert(`Task with ID ${taskId} rescheduled to ${newDate} ${newTime}`);
+                rescheduleForm.style.display = 'none';
+            }
+        </script>
+    
+</body>
+</html>
