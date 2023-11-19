@@ -1,38 +1,64 @@
-# Daily_Task_Scheduler
+# Task Manager Application with Flask
 
 
-## What is Daily Task Scheduler?
+## What is this Application?
   
-  This is an application where we can schedule our regular tasks, which can be rescheduled by the way as well as mark as Completed if in case that specific task is completed. And also an email alert is auto enabled and gets triggered whenever the task gets rescheduled.
-
-## Setup
-  In Order to keep this application running we must install few libraries in python.. Which are the following ones:-
-    1. flask
-    2. flask_login
-    3. sqlite3
-    4. email
-    5. werkzeug
-    6. smtplib
+  This is a Task Manager application built using Flask, allowing users to manage their tasks, schedule events, and set reminders.
 
 
-   **Steps:-**
-     1. Setup of virtual env:-
-          Create a virtual environment just to keep it from colliding from the existing libraries and their versions in the system.
-  
-     2. So, to install all these libraries, open the terminal and go to the folder in which requirements.txt exists and use the following command.
-               pip install -r requirements.txt
+## Introduction
+  This Flask-based Task Manager application allows users to perform various task-related operations. Users can register, log in, add, edit, delete, and mark tasks as completed. It also sends reminders for scheduled tasks via email.
 
-## Once the setup is done, go to the folder where app.py is situated.. And run the app.py file..
+## Features
+  -**User Authentication:** Users can sign up and log in securely.
+  -**Task Management:** Add, edit, delete, and mark tasks as completed.
+  -**Email Reminders:** Sends reminders for scheduled tasks via email.
+  -**Responsive UI:** User-friendly interface for managing tasks.
+  -**Database:** SQLite database used to store user data and task details.
 
-     This starts the development server at the local host. So that's how you can get the app running in your browser..
+## Installation
+### 1. Clone the repository:
+    git clone https://github.com/rohitreddy192/Daily_Task_Scheduler.git
+### 2. Navigate to the project directory:
+    cd Daily_Task_Scheduler
+### 3. Install Dependencies:
+    pip install -r requirements.txt
+### 4. Database Setup:
+    - Run create_database() function to initialize the SQLite database.
+    
+## Usage
+### 1. Run Application:
+     python app.py
+### 2. Access the Application:
+    - Open a web browser and go to http://localhost:5000 to access the Task Manager application.
+### 3. Functionalities:
+    - Register or log in to manage tasks.
+    - Add, edit, delete tasks, and mark them as completed.
+    - Receive email reminders for scheduled tasks.
+## Technologies Used
+  - Flask
+  - SQLite
+  - HTML/CSS
+  - JavaScript
+  - Python 3.x
 
-## If you are a user trying to access it for the first time try to register before you login..
-
-## Once registered and logged in.. Then you will be prompted to the home page where when the events or tasks are added will be displayed..
-    So try adding an event, modifying it or deleting it on completion..
-
+## File Structure
+├── app.py                  # Main Flask application file
+├── tasks.db                # SQLite database file
+├── email_alert.py          # Email alert functionality
+├── static/
+│   ├── css/
+│   │   └── styles.css       # CSS stylesheets
+└── templates/
+    ├── add_event.html       # HTML templates for different routes
+    ├── index.html           
+    ├── login.html           
+    ├── signup.html
 
 
 ## Future Scope & Reference:-
 
-  This can be further added with many features by integrating with the calendar directly on the system so that we can get a direct remainder always.. And also adding dashboards so that we can track daily progress of how it is going and how can this be changed or how dedicative we should become likewise..
+  This can be further added with many features by integrating with the calendar directly on the system so that we can get a direct remainder always.. 
+
+## Contributions
+  Contributions are welcome! If you'd like to contribute to this project, feel free to create issues or pull requests.
