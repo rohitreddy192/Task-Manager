@@ -7,7 +7,9 @@
 
 
 ## Introduction
-  This Flask-based Task Manager application allows users to perform various task-related operations. Users can register, log in, add, edit, delete, and mark tasks as completed. It also sends reminders for scheduled tasks via email.
+  - This Flask-based Task Manager application allows users to perform various task-related operations. 
+  - Users can register, log in, add, edit, delete, and mark tasks as completed.
+  - It also sends reminders for scheduled tasks via email.
 
 ## Features
   - **User Authentication:** Users can sign up and log in securely.
@@ -57,8 +59,7 @@
     ├── signup.html
 ```
 
-## Future Scope & Reference:-
-
+## Future Scope & Reference
   This can be further added with many features by integrating with the calendar directly on the system so that we can get a direct remainder always.. 
 
 ## Contributions
