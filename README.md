@@ -43,6 +43,7 @@
   - Python 3.x
 
 ## File Structure
+```bash
 ├── app.py                  # Main Flask application file
 ├── tasks.db                # SQLite database file
 ├── email_alert.py          # Email alert functionality
@@ -54,7 +55,7 @@
     ├── index.html           
     ├── login.html           
     ├── signup.html
-
+```
 
 ## Future Scope & Reference:-
 
