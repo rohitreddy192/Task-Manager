@@ -10,11 +10,11 @@
   This Flask-based Task Manager application allows users to perform various task-related operations. Users can register, log in, add, edit, delete, and mark tasks as completed. It also sends reminders for scheduled tasks via email.
 
 ## Features
-  -**User Authentication:** Users can sign up and log in securely.
-  -**Task Management:** Add, edit, delete, and mark tasks as completed.
-  -**Email Reminders:** Sends reminders for scheduled tasks via email.
-  -**Responsive UI:** User-friendly interface for managing tasks.
-  -**Database:** SQLite database used to store user data and task details.
+  - **User Authentication:** Users can sign up and log in securely.
+  - **Task Management:** Add, edit, delete, and mark tasks as completed.
+  - **Email Reminders:** Sends reminders for scheduled tasks via email.
+  - **Responsive UI:** User-friendly interface for managing tasks.
+  - **Database:** SQLite database used to store user data and task details.
 
 ## Installation
 ### 1. Clone the repository:
