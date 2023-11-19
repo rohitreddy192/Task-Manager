@@ -26,7 +26,7 @@
 ### 3. Install Dependencies:
     pip install -r requirements.txt
 ### 4. Database Setup:
-    - Run create_database() function to initialize the SQLite database.
+    Run create_database() function to initialize the SQLite database.
     
 ## Usage
 ### 1. Run Application:
